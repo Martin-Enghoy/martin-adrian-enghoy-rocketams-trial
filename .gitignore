@@ -1,2 +1,8 @@
 BRIEF.md
 mock_report_api.py
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.env
