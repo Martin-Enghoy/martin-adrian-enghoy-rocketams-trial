@@ -6,3 +6,7 @@ mock_report_api.py
 __pycache__/
 *.py[cod]
 .env
+
+# IDE
+.vscode/
+.idea/
