@@ -91,7 +91,7 @@ export function JobList({ selectedJobId, onSelectJob }: JobListProps) {
                     {STATUS_ICONS[job.status]} {job.status}
                   </span>                  
                 </td>
-                <td>{job.retryCount > 0 ? `#${job.retryCount}` : "--"}</td>
+                <td>{job.retryCount > 0 ? job.retryCount : "--"}</td>
                 <td>{timeAgo(job.createdAt)}</td>
                 <td>
                   {job.status === "completed" && (
