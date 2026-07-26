@@ -33,3 +33,5 @@ export const REPORT_TYPES = [
   "FBA_INVENTORY",
   "SETTLEMENT",
 ] as const;
+
+export type ReportType = (typeof REPORT_TYPES)[number];

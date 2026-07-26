@@ -1,4 +1,4 @@
-import { Job, JobRowsResponse } from "./types";
+import { Job, JobRowsResponse } from "@/types/types";
 
 const BASE_API_URL = "/api";
 
