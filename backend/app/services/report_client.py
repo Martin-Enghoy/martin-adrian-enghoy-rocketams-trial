@@ -16,7 +16,7 @@ class RateLimitError(Exception):
 
 class ReportClient:
   def __init__(self) -> None:
-    self.client = httpx.AsyncClient(
+    self._client = httpx.AsyncClient(
       base_url=settings.mock_api_url, timeout=30.0
     )
 
