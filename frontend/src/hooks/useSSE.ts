@@ -10,7 +10,7 @@ export function useSSE() {
   const eventSourceRef = useRef<EventSource | null>(null);
   
   useEffect(() => {
-    const eventSource = new EventSource("/api/sse");
+    const eventSource = new EventSource("http://localhost:8000/api/sse");
     eventSourceRef.current = eventSource;
     
     eventSource.onopen = () => {

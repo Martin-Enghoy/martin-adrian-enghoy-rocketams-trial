@@ -1,5 +1,7 @@
 BRIEF.md
 .jobs.db
+.jobs.db-shm
+.jobs.db-wal
 frontend/README.md
 
 # Python

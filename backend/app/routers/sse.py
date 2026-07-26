@@ -18,7 +18,7 @@ async def sse_stream(request: Request):
         try:
           data = await asyncio.wait_for(queue.get(), timeout=30.0)
           yield f"event: job_update\ndata: {json.dumps(data)}\n\n"
-        except:
+        except asyncio.TimeoutError:
           # Keepalive comment: prevents proxies from closing the connection
           yield ": keepalive\n\n"
     finally:

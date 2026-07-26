@@ -14,7 +14,7 @@ export function RunReportControl() {
     onSuccess: (newJob: Job) => {
       // Immediately add to cache for instance feedback
       queryClient.setQueryData<Job[]>(["jobs"], (old) => {
-        old ? [newJob, ...old] : [newJob]
+        return old ? [newJob, ...old] : [newJob]
       });
     },
   });
