@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { fetchJobRows } from "@/lib/api";
 import { JobRowsResponse } from "@/types/types";
 
@@ -9,11 +10,16 @@ interface ResultsTableProps {
   onClose: () => void;
 }
 
+const PAGE_SIZE = 50;
+
 export function ResultsTable({ jobId, onClose }: ResultsTableProps) {
-  const { data, isLoading, isError, error } = useQuery<JobRowsResponse>({
-    queryKey: ["job-rows", jobId],
-    queryFn: () => fetchJobRows(jobId),
+  const [page, setPage] = useState(1);
+  
+  const { data, isLoading, isError, error, isFetching } = useQuery<JobRowsResponse>({
+    queryKey: ["job-rows", jobId, page],
+    queryFn: () => fetchJobRows(jobId, page, PAGE_SIZE),
     staleTime: Infinity, // Report data never changes
+    placeholderData: (prev) => prev, // Keep previous page visible while loading next
   });
   
   if (isLoading) {
@@ -75,6 +81,27 @@ export function ResultsTable({ jobId, onClose }: ResultsTableProps) {
             ))}
           </tbody>
         </table>
+      </div>
+      
+      <div className="pagination">
+        <button
+          className="btn-sm"
+          onClick={() => setPage((p) => Math.max(1, p - 1))}
+          disabled={page <= 1 || isFetching}
+        >
+          ← Prev
+        </button>
+        <span className="pagination-info">
+          Page {data.page} of {data.totalPages}
+          {isFetching && " …"}
+        </span>
+        <button
+          className="btn-sm"
+          onClick={() => setPage((p) => Math.min(data.totalPages, p + 1))}
+          disabled={page >= data.totalPages || isFetching}
+        >
+          Next →
+        </button>
       </div>
     </div>
   );
