@@ -1,0 +1,34 @@
+services:
+  mock-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+  
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      - MOCK_API_URL=http://mock-api:9000
+      - DATABASE_URL=sqlite+aiosqlite:///.jobs.db
+    depends_on:
+      - mock-api
+    volumes:
+      - backend-data:/app
+    
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - BACKEND_URL=http://backend:8000
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    depends_on:
+      - backend
+  
+volumes:
+  backend-data:
