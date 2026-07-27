@@ -30,4 +30,7 @@ class ReportRowResponse(BaseModel):
 class JobRowsResponse(BaseModel):
   jobId: str
   totalRows: int
+  page: int
+  pageSize: int
+  totalPages: int
   rows: list[ReportRowResponse]

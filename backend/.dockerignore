@@ -1,0 +1,6 @@
+.venv
+__pycache__
+.jobs.db
+.jobs.db-shm
+.jobs.db-wal
+tests

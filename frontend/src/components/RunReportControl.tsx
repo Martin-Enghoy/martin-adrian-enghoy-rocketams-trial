@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { createJob } from "@/lib/api";
 import { Job, REPORT_TYPES, ReportType } from "@/types/types";
+import { Spinner } from "./Spinner";
 
 export function RunReportControl() {
   const [reportType, setReportType] = useState<ReportType>("SALES_AND_TRAFFIC");
@@ -39,7 +40,13 @@ export function RunReportControl() {
         onClick={() => mutation.mutate(reportType)}
         disabled={mutation.isPending}
       >
-        {mutation.isPending ? "Submitting..." : "Run Report"}
+        {mutation.isPending ? (
+          <>
+            <Spinner size={14} /> Submitting...
+          </>
+        ) : (
+          "Run Report"
+        )}
       </button>
       
       {mutation.isError && (

@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime, timezone
 
 from fastapi import APIRouter, HTTPException, Request
-from sqlalchemy import select
+from sqlalchemy import select, func
 
 from app.database import async_session_factory
 from app.models import Job, ReportRow
@@ -74,7 +74,12 @@ async def get_job(job_id: str):
   return _to_response(job)
 
 @router.get("/jobs/{job_id}/rows", response_model=JobRowsResponse)
-async def get_job_rows(job_id: str):
+async def get_job_rows(job_id: str, page: int = 1, page_size: int = 50):
+  if page < 1:
+    page = 1
+  if page_size < 1 or page_size > 200:
+    page_size = 50
+        
   async with async_session_factory() as session:
     job = await session.get(Job, job_id)
     if not job:
@@ -84,14 +89,31 @@ async def get_job_rows(job_id: str):
         status_code=409,
         detail=f"Job not completed (status: {job.status})",
       )
+
+    count_result = await session.execute(
+      select(func.count()).select_from(ReportRow).where(ReportRow.job_id == job_id)
+    )
+    total_rows = count_result.scalar_one()
+
+    # Paginated Query
+    offset = (page - 1) * page_size
     result = await session.execute(
-      select(ReportRow).where(ReportRow.job_id == job_id)
+      select(ReportRow)
+      .where(ReportRow.job_id == job_id)
+      .order_by(ReportRow.id)
+      .offset(offset)
+      .limit(page_size)
     )
     rows = result.scalars().all()
+
+  total_pages = max(1, (total_rows + page_size - 1) // page_size)
 
   return JobRowsResponse(
     jobId=job_id,
     totalRows=len(rows),
+    page=page,
+    pageSize=page_size,
+    totalPages=total_pages,
     rows=[
       ReportRowResponse(
         date=row.date,

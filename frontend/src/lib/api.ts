@@ -27,8 +27,16 @@ export async function fetchJobs(): Promise<Job[]> {
   return response.json();
 }
 
-export async function fetchJobRows(jobId: string): Promise<JobRowsResponse> {
-  const response = await fetch(`${BASE_API_URL}/jobs/${jobId}/rows`);
+export async function fetchJobRows(
+  jobId: string,
+  page: number = 1,
+  pageSize: number = 50,  
+): Promise<JobRowsResponse> {
+  const params = new URLSearchParams({
+    page: String(page),
+    page_size: String(pageSize),
+  });  
+  const response = await fetch(`${BASE_API_URL}/jobs/${jobId}/rows?${params}`);
   
   if (!response.ok) {
     const detail = await response.json().catch(() => ({}));

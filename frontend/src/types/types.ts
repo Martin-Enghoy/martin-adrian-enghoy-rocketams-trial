@@ -25,6 +25,9 @@ export interface ReportRow {
 export interface JobRowsResponse {
   jobId: string;
   totalRows: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
   rows: ReportRow[];
 }
 
